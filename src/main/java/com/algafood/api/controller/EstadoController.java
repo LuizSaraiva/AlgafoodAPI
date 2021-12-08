@@ -1,6 +1,7 @@
 package com.algafood.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algafood.domain.exception.EntidadeEmUsoException;
 import com.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algafood.domain.model.Estado;
 import com.algafood.domain.repository.EstadoRepository;
@@ -32,12 +34,19 @@ public class EstadoController {
 	
 	@GetMapping
 	public List<Estado> todos(){
-		return repository.todos();
+		return repository.findAll();
 	}
 	
 	@GetMapping("/{idEstado}")
-	public Estado buscar(@PathVariable Long idEstado) {
-		return repository.buscar(idEstado);
+	public ResponseEntity<Estado> buscar(@PathVariable Long idEstado) {
+		
+		Optional<Estado> estado = repository.findById(idEstado);
+		
+		if(estado.isPresent()) {
+			return ResponseEntity.ok(estado.get());
+		}
+		return ResponseEntity.notFound().build();
+		
 	}
 
 	@PostMapping
@@ -53,6 +62,8 @@ public class EstadoController {
 			
 		}catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		}catch (EntidadeEmUsoException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
 		}
 		
 		return ResponseEntity.noContent().build();
@@ -63,16 +74,16 @@ public class EstadoController {
 			@PathVariable Long idEstado,
 			@RequestBody Estado estado) {
 		
-		Estado estadoAtual = repository.buscar(idEstado);
+		Optional<Estado> estadoAtual = repository.findById(idEstado);
 		
-		if(estadoAtual == null) {
-			return ResponseEntity.notFound().build();
-		}
+		if(estadoAtual.isPresent()) {
 
-			BeanUtils.copyProperties(estado, estadoAtual,"id");
-			service.salvar(estadoAtual);
+			BeanUtils.copyProperties(estado, estadoAtual.get(),"id");
+			Estado estadoSalvar = service.salvar(estadoAtual.get());
 			
-			return ResponseEntity.status(HttpStatus.OK).body(estadoAtual);
+			return ResponseEntity.ok(estadoSalvar);
+		}
+			return ResponseEntity.notFound().build();
 		
 	}
 }

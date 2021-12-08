@@ -22,13 +22,10 @@ public class CidadeService {
 	public Cidade salvar(Cidade cidade) {
 		
 		Long estadoId = cidade.getEstado().getId();
-		Estado estado = repositoryEstado.buscar(estadoId);
-		
-		if(estado == null) {
-			throw new EntidadeNaoEncontradaException(
-					String.format("Estado não existe ou nulo!", estadoId));
-		}
-		
+		Estado estado = repositoryEstado.findById(estadoId)
+				.orElseThrow ( () -> new EntidadeNaoEncontradaException(
+						String.format("Estado não existe ou nulo!", estadoId)));
+				
 		cidade.setEstado(estado);
 		
 		return repositoryCidade.save(cidade);
