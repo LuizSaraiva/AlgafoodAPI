@@ -3,8 +3,7 @@ package com.algafood.api.controller;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
-
-import javax.transaction.Transactional;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algafood.domain.exception.EntidadeNaoEncontradaException;
@@ -40,19 +37,18 @@ public class RestauranteController {
 	
 	@GetMapping
 	public List<Restaurante> todos(){
-		return repository.todos();
+		return repository.findAll();
 	}
 	
 	@GetMapping("/{idRestaurante}")
 	public ResponseEntity<Restaurante> buscar(@PathVariable Long idRestaurante) {
 		
-		Restaurante restaurante = repository.buscar(idRestaurante);
+		Optional<Restaurante> restaurante = repository.findById(idRestaurante);
 		
-		if(restaurante == null) {
-			return ResponseEntity.notFound().build();
+		if(restaurante.isPresent()) {
+			return ResponseEntity.ok(restaurante.get());
 		}
-		
-		return ResponseEntity.ok(restaurante);
+		return ResponseEntity.notFound().build();
 	}
 	
 	@PostMapping
@@ -73,15 +69,14 @@ public class RestauranteController {
 			@PathVariable Long idRestaurante,
 			@RequestBody Restaurante restaurante){
 		try {
-		Restaurante restauranteAtual = repository.buscar(idRestaurante);
+		Optional<Restaurante> restauranteAtual = repository.findById(idRestaurante);
 				
-			if(restauranteAtual != null) {
+			if(restauranteAtual.isPresent()) {
 				
 				BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
 				
-				
-					service.salvar(restauranteAtual);
-					return ResponseEntity.ok(restauranteAtual);					
+				Restaurante restauranteSalvar = service.salvar(restauranteAtual.get());
+				return ResponseEntity.ok(restauranteSalvar);					
 				
 			}
 			return ResponseEntity.notFound().build();
@@ -96,17 +91,15 @@ public class RestauranteController {
 			@RequestBody Map<String, Object> campos
 			){
 		
-		Restaurante restauranteAtual = repository.buscar(idRestaurante);
+		Optional<Restaurante> restauranteAtual = repository.findById(idRestaurante);
 		
 		if(restauranteAtual == null) {
 			return ResponseEntity.notFound().build();	
 		}
 		
-		merge(campos, restauranteAtual);
+		merge(campos, restauranteAtual.get());	
 		
-	
-		
-		return atualizar(idRestaurante, restauranteAtual);
+		return atualizar(idRestaurante, restauranteAtual.get());
 	}
 
 	private void merge(Map<String, Object> camposOrigem, Restaurante restauranteDestino ) {
