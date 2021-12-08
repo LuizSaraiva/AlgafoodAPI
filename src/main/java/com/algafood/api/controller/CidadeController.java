@@ -1,6 +1,7 @@
 package com.algafood.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,12 +30,20 @@ public class CidadeController {
 	
 	@GetMapping
 	public List<Cidade> todos(){
-		return repository.todos();
+		return repository.findAll();
 	}
 	
 	@GetMapping("/{idCidade}")
-	public Cidade buscar(@PathVariable Long idCidade) {
-		return repository.buscar(idCidade);
+	public ResponseEntity<Cidade> buscar(@PathVariable Long idCidade) {
+		
+		Optional<Cidade> cidade = repository.findById(idCidade);
+		
+		if(cidade.isPresent()) {
+			return ResponseEntity.ok(cidade.get());
+		}
+		
+		return ResponseEntity.notFound().build();
+				
 	}
 	
 	@PostMapping
