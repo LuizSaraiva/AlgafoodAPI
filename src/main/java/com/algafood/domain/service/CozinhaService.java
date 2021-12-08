@@ -21,13 +21,13 @@ public class CozinhaService {
 	CozinhaRepository repository;
 	
 	public Cozinha salvar(Cozinha cozinha) {	
-		return repository.salvar(cozinha);
+		return repository.save(cozinha);
 	}
 	
 	public void deletar(Long idCozinha) {
 		
 		try {
-			repository.deletar(idCozinha);			
+			repository.deleteById(idCozinha);			
 		}catch (EmptyResultDataAccessException e) {
 			throw new EntidadeNaoEncontradaException(String.format("Cozinha com id %d não encontrada!", idCozinha));
 		
