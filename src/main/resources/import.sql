@@ -17,3 +17,7 @@ insert into cidade(nome, estado_id) values ('Uberlandia', 3);
 insert into cidade(nome, estado_id) values ('Sumare', 1);
 insert into cidade(nome, estado_id) values ('Campinas', 1);
 insert into cidade(nome, estado_id) values ('Goiania', 5);
+
+insert into forma_pagamento(id, descricao) values (1, 'Cartão de crédito');
+insert into forma_pagamento(id, descricao) values (2, 'Cartão de débito');
+insert into forma_pagamento(id, descricao) values (3, 'Dinheiro');
