@@ -11,7 +11,7 @@ import com.algafood.domain.model.Restaurante;
 
 @Repository
 public interface RestauranteRepository 
-	extends JpaRepository<Restaurante, Long>, RestauranteRepositoryQueries, JpaSpecificationExecutor<Restaurante>{
+	extends CustomJpaRepository<Restaurante, Long>, RestauranteRepositoryQueries, JpaSpecificationExecutor<Restaurante>{
 	
 	List<Restaurante> find(
 			String nome,
