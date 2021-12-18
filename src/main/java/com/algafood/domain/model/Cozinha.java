@@ -1,5 +1,6 @@
 package com.algafood.domain.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -25,7 +26,7 @@ public class Cozinha {
 
 	private String nome;
 	
-	@OneToMany(mappedBy = "cozinha")
 	@JsonIgnore
-	private List<Restaurante> restaurantes;
+	@OneToMany(mappedBy = "cozinha")
+	private List<Restaurante> restaurantes = new ArrayList<>();
 }
