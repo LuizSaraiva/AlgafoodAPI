@@ -3,6 +3,8 @@ insert into cozinha (nome) values ('Indiana');
 
 insert into restaurante (nome,taxa_frete,cozinha_id) values ('padrao1',1,1);
 insert into restaurante (nome,taxa_frete, cozinha_id) values ('padrao2',2,2);
+insert into restaurante (nome,taxa_frete, cozinha_id) values ('padrao3',0,1);
+insert into restaurante (nome,taxa_frete, cozinha_id) values ('padrao4',0,2);
 
 insert into estado(nome) values ('Sao Paulo');
 insert into estado(nome) values ('Rio de Janeiro');

@@ -17,6 +17,8 @@ import com.algafood.domain.model.Restaurante;
 import com.algafood.domain.repository.CozinhaRepository;
 import com.algafood.domain.repository.RestauranteRepository;
 
+
+
 @RestController
 @RequestMapping("/teste")
 public class TesteController {
@@ -40,6 +42,11 @@ public class TesteController {
 			BigDecimal taxaFreteFinal){
 		return restauranteRepo.find(nome, taxaFreteInicial, taxaFreteFinal);
 		
+	}
+	
+	@GetMapping("restaurantes/com-frete-gratis")
+	public List<Restaurante> restauranteComFreteGratis(String nome){
+		return restauranteRepo.freteGratis(nome);
 	}
 
 }
