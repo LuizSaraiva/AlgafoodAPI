@@ -20,6 +20,8 @@ public class RestauranteService {
 	
 	public Restaurante salvar(Restaurante restaurante) {
 		
+		System.out.println(restaurante.getNome());
+		
 		Long cozinhaId = restaurante.getCozinha().getId();
 		Cozinha cozinha = repositoryCozinha.findById(cozinhaId)
 				.orElseThrow( () -> new EntidadeNaoEncontradaException(
