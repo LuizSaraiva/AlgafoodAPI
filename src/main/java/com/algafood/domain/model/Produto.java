@@ -22,9 +22,16 @@ public class Produto {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@JoinColumn(nullable = false)
 	private String nome;
+	
+	@JoinColumn(nullable = false)
 	private String descricao;
+	
+	@JoinColumn(nullable = false)
 	private BigDecimal preco;
+
+	@JoinColumn(nullable = false)
 	private Boolean ativo;
 
 	@ManyToOne
