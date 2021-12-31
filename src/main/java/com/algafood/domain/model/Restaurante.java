@@ -61,7 +61,6 @@ public class Restaurante {
 	@JsonIgnore
 	private List<Produto> produtos = new ArrayList<>();
 	
-	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "restaurante_forma_pagamento",
 				joinColumns = @JoinColumn(name = "restaurante_id"),
