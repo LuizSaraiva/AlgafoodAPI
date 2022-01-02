@@ -20,7 +20,7 @@ public interface RestauranteRepository
 			BigDecimal taxaFreteFinal
 			);
 	
-	@Query("from Restaurante r join r.cozinha left join fetch r.formaPagamento")
+	@Query("from Restaurante r join r.cozinha")
 	List<Restaurante> findAll();
 
 }
