@@ -32,4 +32,10 @@ public class RestauranteService {
 		return repositoryRestaurante.save(restaurante);
 	}
 	
+	public Restaurante buscaOuFalha(Long idRestaurante) {
+		return repositoryRestaurante.findById(idRestaurante).orElseThrow(
+				() -> new EntidadeNaoEncontradaException(
+						String.format("Restaurante com id %d não encontrado!", idRestaurante)));
+	}
+	
 }
