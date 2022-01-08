@@ -34,16 +34,8 @@ public class CidadeController {
 	}
 	
 	@GetMapping("/{idCidade}")
-	public ResponseEntity<Cidade> buscar(@PathVariable Long idCidade) {
-		
-		Optional<Cidade> cidade = repository.findById(idCidade);
-		
-		if(cidade.isPresent()) {
-			return ResponseEntity.ok(cidade.get());
-		}
-		
-		return ResponseEntity.notFound().build();
-				
+	public Cidade buscar(@PathVariable Long idCidade) {
+		return service.buscaOuFalha(idCidade);
 	}
 	
 	@PostMapping
