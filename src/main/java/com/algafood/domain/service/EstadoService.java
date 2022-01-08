@@ -13,6 +13,8 @@ import com.algafood.domain.repository.EstadoRepository;
 @Service
 public class EstadoService {
 
+	private static final String MSG_ESTADO_EM_USO = "Não permitido! Estado %d esta sendo utilizada em alguma cidade.";
+	private static final String MSG_ESTADO_NAO_ENCONTRADO = "Estado com id %d não encontrada!";
 	@Autowired
 	private EstadoRepository repository;
 	
@@ -25,11 +27,17 @@ public class EstadoService {
 		try {
 			repository.deleteById(idEstado);			
 		}catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format("Estado com id %d não encontrada!", idEstado));
+			throw new EntidadeNaoEncontradaException(String.format(MSG_ESTADO_NAO_ENCONTRADO, idEstado));
 		
 		}catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(
-					String.format("Não permitido! Estado %d esta sendo utilizada em alguma cidade.", idEstado));
+					String.format(MSG_ESTADO_EM_USO, idEstado));
 		}
+	}
+	
+	public Estado buscarOuFalhar(Long idEstado) {
+		return repository.findById(idEstado).orElseThrow(
+				() -> new EntidadeNaoEncontradaException(
+						String.format(MSG_ESTADO_NAO_ENCONTRADO, idEstado)));
 	}
 }
