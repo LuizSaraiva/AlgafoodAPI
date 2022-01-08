@@ -1,16 +1,14 @@
 package com.algafood.domain.service;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.algafood.domain.exception.EntidadeEmUsoException;
-import com.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algafood.domain.model.Cozinha;
 import com.algafood.domain.repository.CozinhaRepository;
 
@@ -29,7 +27,8 @@ public class CozinhaService {
 		try {
 			repository.deleteById(idCozinha);			
 		}catch (EmptyResultDataAccessException e) {
-			throw new EntidadeNaoEncontradaException(String.format("Cozinha com id %d não encontrada!", idCozinha));
+			throw new ResponseStatusException(
+					HttpStatus.NOT_FOUND, String.format("Cozinha com id %d não encontrada!", idCozinha));
 		
 		}catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(
