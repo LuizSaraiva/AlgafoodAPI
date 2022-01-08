@@ -59,18 +59,11 @@ public class CozinhaController {
 	}
 	
 	@DeleteMapping("/{idCozinha}")
-	public ResponseEntity<?> delete(@PathVariable Long idCozinha) {
-
-		try {
-			service.deletar(idCozinha);	
-		}catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-		}catch (EntidadeEmUsoException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-		}
-		
-			return ResponseEntity.noContent().build();
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void delete(@PathVariable Long idCozinha) {
+		service.deletar(idCozinha);
 	}
+	
 	
 	@PutMapping("/{idCozinha}")
 	public ResponseEntity<Cozinha> atualizar(@PathVariable Long idCozinha,
