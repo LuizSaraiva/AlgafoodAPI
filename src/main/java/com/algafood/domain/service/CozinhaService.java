@@ -3,9 +3,7 @@ package com.algafood.domain.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.algafood.domain.exception.EntidadeEmUsoException;
 import com.algafood.domain.exception.EntidadeNaoEncontradaException;
@@ -15,8 +13,13 @@ import com.algafood.domain.repository.CozinhaRepository;
 @Service
 public class CozinhaService {
 
+	private static final String MSG_COZINHA_EM_USO = "Não permitido! Cozinha %d esta sendo utilizada em algum restaurante.";
+
+	private static final String MSG_COZINHA_NAO_ENCONTRADA = "Cozinha com id %d não encontrada!";
+
 	@Autowired
 	CozinhaRepository repository;
+
 	
 	public Cozinha salvar(Cozinha cozinha) {	
 		return repository.save(cozinha);
@@ -28,12 +31,18 @@ public class CozinhaService {
 			repository.deleteById(idCozinha);			
 		}catch (EmptyResultDataAccessException e) {
 			throw new EntidadeNaoEncontradaException(
-					String.format("Cozinha com id %d não encontrada!", idCozinha));
+					String.format(MSG_COZINHA_NAO_ENCONTRADA, idCozinha));
 		
 		}catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(
-					String.format("Não permitido! Cozinha %d esta sendo utilizada em algum restaurante.", idCozinha));
+					String.format(MSG_COZINHA_EM_USO, idCozinha));
 		}
+	}
+	
+	public Cozinha buscarOuFalhar(Long idCozinha) {
+		return repository.findById(idCozinha).orElseThrow(() -> 
+				new EntidadeNaoEncontradaException(
+						String.format(MSG_COZINHA_NAO_ENCONTRADA, idCozinha)));
 	}
 	
 }
