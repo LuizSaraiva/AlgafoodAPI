@@ -3,10 +3,9 @@ package com.algafood.domain.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.algafood.domain.exception.EntidadeNaoEncontradaException;
+import com.algafood.domain.exception.RestauranteNaoEncontradoException;
 import com.algafood.domain.model.Cozinha;
 import com.algafood.domain.model.Restaurante;
-import com.algafood.domain.repository.CozinhaRepository;
 import com.algafood.domain.repository.RestauranteRepository;
 
 @Service
@@ -16,16 +15,13 @@ public class RestauranteService {
 	RestauranteRepository repositoryRestaurante;
 	
 	@Autowired
-	CozinhaRepository repositoryCozinha;
+	CozinhaService serviceCozinha;
 	
 	public Restaurante salvar(Restaurante restaurante) {
 		
-		System.out.println(restaurante.getNome());
-		
 		Long cozinhaId = restaurante.getCozinha().getId();
-		Cozinha cozinha = repositoryCozinha.findById(cozinhaId)
-				.orElseThrow( () -> new EntidadeNaoEncontradaException(
-						String.format("Não existe uma cozinha com o id %d", cozinhaId)));
+		
+		Cozinha cozinha = serviceCozinha.buscarOuFalhar(cozinhaId);
 		
 		restaurante.setCozinha(cozinha);
 		
@@ -34,8 +30,7 @@ public class RestauranteService {
 	
 	public Restaurante buscaOuFalha(Long idRestaurante) {
 		return repositoryRestaurante.findById(idRestaurante).orElseThrow(
-				() -> new EntidadeNaoEncontradaException(
-						String.format("Restaurante com id %d não encontrado!", idRestaurante)));
+				() -> new RestauranteNaoEncontradoException(idRestaurante));
 	}
 	
 }
